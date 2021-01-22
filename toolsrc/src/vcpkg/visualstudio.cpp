@@ -159,6 +159,30 @@ namespace vcpkg::VisualStudio
         // VS2015 instance from Program Files
         append_if_has_cl_vs140(program_files_32_bit / "Microsoft Visual Studio 14.0");
 
+        const auto append_if_has_cl_vs120 = [&](fs::path&& path_root) {
+            const auto cl_exe = path_root / "VC" / "bin" / "cl.exe";
+            const auto vcvarsall_bat = path_root / "VC" / "vcvarsall.bat";
+
+            if (fs.exists(cl_exe) && fs.exists(vcvarsall_bat))
+                instances.emplace_back(std::move(path_root), "12.0", VisualStudioInstance::ReleaseType::LEGACY);
+        };
+
+        // VS2013 instance from environment variable
+        auto maybe_vs120_comntools = System::get_environment_variable("vs120comntools");
+        if (const auto path_as_string = maybe_vs120_comntools.get())
+        {
+            // We want lexically_normal(), but it is not available
+            // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash.
+            auto common7_tools = fs::u8path(*path_as_string);
+            if (common7_tools.filename().empty())
+                append_if_has_cl_vs120(common7_tools.parent_path().parent_path().parent_path());
+            else
+                append_if_has_cl_vs120(common7_tools.parent_path().parent_path());
+        }
+
+        // VS2013 instance from Program Files
+        append_if_has_cl_vs120(program_files_32_bit / "Microsoft Visual Studio 12.0");
+
         return instances;
     }
 
