@@ -16,7 +16,7 @@ vcpkg_from_github(
   REF CRYPTOPP_8_2_0
   SHA512 d2dcc107091d00800de243abdce8286ccd7fcc5707eebf88b97675456a021e62002e942b862db0465f72142951f631c0c1f0b2ba56028b96461780a17f2dfdf9
   HEAD_REF master
-  PATCHES patch.patch
+  PATCHES patch.patch clang-cl.patch
 )
 
 file(COPY ${CMAKE_SOURCE_PATH}/cryptopp-config.cmake DESTINATION ${SOURCE_PATH})

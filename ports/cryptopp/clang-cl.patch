@@ -1,0 +1,30 @@
+diff --git a/config.h b/config.h
+index 283c4090..8a928893 100644
+--- a/config.h
++++ b/config.h
+@@ -266,16 +266,6 @@ typedef signed int sword32;
+ typedef word64 lword;
+ const lword LWORD_MAX = W64LIT(0xffffffffffffffff);
+ 
+-// It is OK to remove the hard stop below, but you are on your own.
+-//   After building the library be sure to run self tests described
+-//   https://www.cryptopp.com/wiki/Release_Process#Self_Tests
+-// Some relevant bug reports can be found at:
+-//   * Clang: http://github.com/weidai11/cryptopp/issues/147
+-//   * Native Client: https://github.com/weidai11/cryptopp/issues/719
+-#if (defined(_MSC_VER) && defined(__clang__))
+-# error: "Unsupported configuration"
+-#endif
+-
+ #ifdef __GNUC__
+ 	#define CRYPTOPP_GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+ #endif
+@@ -384,7 +374,7 @@ NAMESPACE_END
+ 	#define CRYPTOPP_FASTCALL
+ #endif
+ 
+-#ifdef _MSC_VER
++#if defined(_MSC_VER) && !defined(__clang__)
+ #define CRYPTOPP_NO_VTABLE __declspec(novtable)
+ #else
+ #define CRYPTOPP_NO_VTABLE
